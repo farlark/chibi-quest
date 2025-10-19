@@ -1,0 +1,7 @@
+id,name,rarity,description,effectType,effectValue,effectCondition
+evt_card_001,戰士之魂,3,隊伍中所有戰士職業攻擊力增加15%,stat_boost,15,job:warrior:atk
+evt_card_002,幸運女神,4,升級技能時有50%機率直接升至滿等,skill_boost,50,skill_upgrade_lucky
+evt_card_003,精英訓練,3,招募新隊員時該隊員攻擊力額外+10,recruitment_boost,10,recruit:atk
+evt_card_004,冒險家之證,2,隊伍經驗獲得量增加20%,exp_boost,20,team_exp
+evt_card_005,命運之輪,5,稀有事件出現機率提升30%,event_rate,30,rare_event
+evt_card_006,法師密卷,3,隊伍中所有法師職業魔法防禦增加20%,stat_boost,20,job:mage:res

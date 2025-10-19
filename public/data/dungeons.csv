@@ -1,0 +1,3 @@
+id,name,description,difficulty,recommendedPower,environment,enemyElements,availableRecruits,numNodes
+dungeon_001,燃燒森林,炎熱的火焰森林充滿危險的火屬性怪物,1,200,火焰環境,fire,char_001;char_007;char_011;char_017,12
+dungeon_002,冰霜洞窟,寒冷刺骨的冰窟,充滿水屬性生物,1,200,寒冰環境,water,char_002;char_008;char_013;char_018,12
