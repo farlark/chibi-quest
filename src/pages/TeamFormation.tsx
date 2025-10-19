@@ -27,6 +27,42 @@ export default function TeamFormation() {
   const [showEventCards, setShowEventCards] = useState(false);
   const [viewingCharacter, setViewingCharacter] = useState<CharacterCard | null>(null);
   const [draggedPosition, setDraggedPosition] = useState<number | null>(null);
+  const [touchStart, setTouchStart] = useState<{ x: number; y: number; position: number } | null>(null);
+
+  // 觸控拖曳處理
+  const handleTouchStart = (e: React.TouchEvent, position: number, hasChar: boolean) => {
+    if (!hasChar) return;
+    const touch = e.touches[0];
+    setTouchStart({ x: touch.clientX, y: touch.clientY, position });
+    setDraggedPosition(position);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (touchStart === null) return;
+    e.preventDefault(); // 防止滾動
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent, dropPosition: number) => {
+    if (touchStart === null || draggedPosition === null) return;
+
+    const touch = e.changedTouches[0];
+    const deltaX = Math.abs(touch.clientX - touchStart.x);
+    const deltaY = Math.abs(touch.clientY - touchStart.y);
+
+    // 如果移動距離很小，視為點擊而非拖曳
+    if (deltaX < 10 && deltaY < 10) {
+      const charId = Object.entries(characterPositions).find(([_, pos]) => pos === draggedPosition)?.[0];
+      if (charId) {
+        setLeader(charId);
+      }
+    } else if (draggedPosition !== dropPosition) {
+      // 執行交換
+      swapCharacterPositions(draggedPosition, dropPosition);
+    }
+
+    setTouchStart(null);
+    setDraggedPosition(null);
+  };
 
   const handleStartAdventure = () => {
     if (!canStartAdventure() || !selectedDungeon) return;
@@ -114,16 +150,19 @@ export default function TeamFormation() {
                       }
                       setDraggedPosition(null);
                     }}
+                    onTouchStart={(e) => handleTouchStart(e, position, !!char)}
+                    onTouchMove={handleTouchMove}
+                    onTouchEnd={(e) => handleTouchEnd(e, position)}
                     onClick={() => char && setLeader(char.id)}
-                    className={`relative rounded-lg p-2 transition-all select-none ${
-                      char ? 'bg-gray-700 cursor-move' : 'bg-gray-700 bg-opacity-30 border-2 border-dashed border-gray-600'
+                    className={`relative rounded-lg p-2 transition-all select-none w-full h-24 ${
+                      char ? 'bg-gray-700 cursor-move touch-none' : 'bg-gray-700 bg-opacity-30 border-2 border-dashed border-gray-600'
                     } ${isLeader ? 'ring-2 ring-yellow-400' : ''} ${
                       draggedPosition === position ? 'opacity-30 scale-95' : draggedPosition !== null ? 'ring-2 ring-blue-400 ring-opacity-50' : ''
                     }`}
                   >
                     {char ? (
-                      <>
-                        <div className="text-center text-2xl mb-1 pointer-events-none">
+                      <div className="flex flex-col items-center justify-center h-full">
+                        <div className="text-2xl mb-0.5 pointer-events-none">
                           {char.job === 'warrior' && '⚔️'}
                           {char.job === 'mage' && '🔮'}
                           {char.job === 'archer' && '🏹'}
@@ -131,7 +170,7 @@ export default function TeamFormation() {
                           {char.job === 'healer' && '💚'}
                           {char.job === 'assassin' && '🗡️'}
                         </div>
-                        <p className="text-white text-xs font-bold text-center truncate pointer-events-none">
+                        <p className="text-white text-xs font-bold text-center truncate pointer-events-none w-full px-1">
                           {char.name}
                         </p>
                         <p className="text-gray-400 text-xs text-center pointer-events-none">Lv.{char.level}</p>
@@ -140,9 +179,9 @@ export default function TeamFormation() {
                             👑
                           </div>
                         )}
-                      </>
+                      </div>
                     ) : (
-                      <div className="aspect-square flex items-center justify-center">
+                      <div className="flex items-center justify-center h-full">
                         <span className="text-gray-500 text-2xl">+</span>
                       </div>
                     )}
@@ -189,16 +228,19 @@ export default function TeamFormation() {
                       }
                       setDraggedPosition(null);
                     }}
+                    onTouchStart={(e) => handleTouchStart(e, position, !!char)}
+                    onTouchMove={handleTouchMove}
+                    onTouchEnd={(e) => handleTouchEnd(e, position)}
                     onClick={() => char && setLeader(char.id)}
-                    className={`relative rounded-lg p-2 transition-all select-none ${
-                      char ? 'bg-gray-700 cursor-move' : 'bg-gray-700 bg-opacity-30 border-2 border-dashed border-gray-600'
+                    className={`relative rounded-lg p-2 transition-all select-none w-full h-24 ${
+                      char ? 'bg-gray-700 cursor-move touch-none' : 'bg-gray-700 bg-opacity-30 border-2 border-dashed border-gray-600'
                     } ${isLeader ? 'ring-2 ring-yellow-400' : ''} ${
                       draggedPosition === position ? 'opacity-30 scale-95' : draggedPosition !== null ? 'ring-2 ring-blue-400 ring-opacity-50' : ''
                     }`}
                   >
                     {char ? (
-                      <>
-                        <div className="text-center text-2xl mb-1 pointer-events-none">
+                      <div className="flex flex-col items-center justify-center h-full">
+                        <div className="text-2xl mb-0.5 pointer-events-none">
                           {char.job === 'warrior' && '⚔️'}
                           {char.job === 'mage' && '🔮'}
                           {char.job === 'archer' && '🏹'}
@@ -206,7 +248,7 @@ export default function TeamFormation() {
                           {char.job === 'healer' && '💚'}
                           {char.job === 'assassin' && '🗡️'}
                         </div>
-                        <p className="text-white text-xs font-bold text-center truncate pointer-events-none">
+                        <p className="text-white text-xs font-bold text-center truncate pointer-events-none w-full px-1">
                           {char.name}
                         </p>
                         <p className="text-gray-400 text-xs text-center pointer-events-none">Lv.{char.level}</p>
@@ -215,9 +257,9 @@ export default function TeamFormation() {
                             👑
                           </div>
                         )}
-                      </>
+                      </div>
                     ) : (
-                      <div className="aspect-square flex items-center justify-center">
+                      <div className="flex items-center justify-center h-full">
                         <span className="text-gray-500 text-2xl">+</span>
                       </div>
                     )}
@@ -276,7 +318,7 @@ export default function TeamFormation() {
                       e.preventDefault();
                       setViewingCharacter(char);
                     }}
-                    className={`relative bg-gray-700 rounded-lg p-2 cursor-pointer transition-all ${
+                    className={`relative bg-gray-700 rounded-lg p-2 cursor-pointer transition-all w-full h-28 ${
                       isSelected ? 'ring-2 ring-green-400 scale-95' : 'hover:scale-105'
                     }`}
                     style={{ borderTop: `3px solid ${rarityColor}` }}
@@ -336,7 +378,7 @@ export default function TeamFormation() {
                   <div
                     key={card.id}
                     onClick={() => toggleEventCardSelection(card)}
-                    className={`relative bg-gray-700 rounded-lg p-2 cursor-pointer transition-all ${
+                    className={`relative bg-gray-700 rounded-lg p-2 cursor-pointer transition-all w-full h-24 ${
                       isSelected ? 'ring-2 ring-purple-400 scale-95' : 'hover:scale-105'
                     }`}
                   >
