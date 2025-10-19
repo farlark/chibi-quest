@@ -129,7 +129,7 @@ export function getAvailableChoices(event: RandomEvent, team: Team): EventChoice
 /**
  * 生成事件結果描述
  */
-export function generateEventResultDescription(result: EventResult, team: Team): string {
+export function generateEventResultDescription(result: EventResult, _team: Team): string {
   let description = result.description;
 
   // 添加數值變化的詳細描述

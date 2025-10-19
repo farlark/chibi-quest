@@ -68,6 +68,8 @@ export default function Adventure() {
 
   // 處理戰鬥節點
   const handleCombatNode = () => {
+    if (!currentNode) return;
+
     const enemies = generateNodeEnemies(
       currentNode.type === 'boss' ? 'boss' : 'combat',
       adventureTeam.teamLevel,

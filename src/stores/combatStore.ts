@@ -31,7 +31,7 @@ interface CombatStore {
   resetCombat: () => void;
 }
 
-export const useCombatStore = create<CombatStore>((set, get) => ({
+export const useCombatStore = create<CombatStore>((set) => ({
   // 初始狀態
   combatState: null,
   isAnimating: false,

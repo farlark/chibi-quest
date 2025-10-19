@@ -6,11 +6,9 @@ import { create } from 'zustand';
 import type {
   Dungeon,
   Team,
-  AdventureNode,
   CombatCharacter,
   EventCard,
   CharacterCard,
-  RandomEvent,
 } from '@/types';
 import { MAX_TEAM_SIZE } from '@/config/constants';
 

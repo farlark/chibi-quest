@@ -15,7 +15,6 @@ import type {
   LeaderSkill,
   EventChoice,
   EventResult,
-  DungeonAffinity,
 } from '@/types';
 import { DEFAULT_CHARACTER_STATS, DEFAULT_SKILL_MULTIPLIERS } from '@/config/gameConfig';
 
@@ -48,7 +47,7 @@ async function loadCSV<T>(path: string, transform: (row: any) => T): Promise<T[]
             reject(error);
           }
         },
-        error: (error) => {
+        error: (error: any) => {
           reject(error);
         },
       });

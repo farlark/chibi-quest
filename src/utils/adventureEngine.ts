@@ -10,17 +10,16 @@ import type {
   CharacterCard,
   RandomEvent,
   LevelUpReward,
-  Enemy,
 } from '@/types';
 import { ADVENTURE_NODE_CONFIG } from '@/config/gameConfig';
 import { randomInt, weightedRandom, calculateExpRequirement } from './calculator';
 import { generateEnemyTeam } from './combat';
-import { MAX_ENERGY, EXP_PER_LEVEL, MAX_SKILL_LEVEL } from '@/config/constants';
+import { MAX_ENERGY, MAX_SKILL_LEVEL } from '@/config/constants';
 
 /**
  * 生成冒險節點
  */
-export function generateAdventureNodes(dungeon: Dungeon, teamLevel: number): AdventureNode[] {
+export function generateAdventureNodes(dungeon: Dungeon, _teamLevel: number): AdventureNode[] {
   const nodes: AdventureNode[] = [];
   const { eventNodeChance } = ADVENTURE_NODE_CONFIG;
 
@@ -130,7 +129,7 @@ export function gainExperience(
 export function generateLevelUpRewards(
   team: Team,
   availableRecruits: CharacterCard[],
-  dungeonId: string
+  _dungeonId: string
 ): LevelUpReward[] {
   const rewards: LevelUpReward[] = [];
 
@@ -209,7 +208,7 @@ export function generateLevelUpRewards(
 export function applyLevelUpReward(
   team: Team,
   reward: LevelUpReward,
-  allCharacters: CharacterCard[]
+  _allCharacters: CharacterCard[]
 ): Team {
   const updatedTeam = { ...team };
 
@@ -319,7 +318,7 @@ export function initializeAdventureTeam(
   selectedCharacters: CharacterCard[],
   selectedEventCards: any[],
   leaderId: string,
-  dungeonId: string,
+  _dungeonId: string,
   characterPositions: Record<string, number>
 ): Team {
   // 按照站位排序角色，並確定前排/後排

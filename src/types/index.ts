@@ -210,6 +210,7 @@ export interface Dungeon {
   enemyElements: ElementType[]; // 主要敵人屬性
   availableRecruits: string[]; // 可招募角色ID列表
   rewards: string[];
+  numNodes: number; // 節點數量
   nodes: AdventureNode[]; // 冒險節點
   bosses: Enemy[]; // Boss列表
 }

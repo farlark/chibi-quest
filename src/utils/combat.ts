@@ -102,7 +102,7 @@ function executeNormalAttack(
   attacker: CombatCharacter,
   defenders: CombatCharacter[],
   turn: number,
-  isPlayer: boolean
+  _isPlayer: boolean
 ): CombatAction {
   const target = selectTarget(defenders, attacker.position);
   if (!target) {
@@ -126,7 +126,7 @@ function executeSkillAction(
   defenders: CombatCharacter[],
   skill: Skill,
   turn: number,
-  isPlayer: boolean
+  _isPlayer: boolean
 ): CombatAction {
   if (skill.targetType === 'all') {
     // AOE 攻擊
@@ -234,7 +234,7 @@ function executeAOEAttack(
  */
 function selectTarget(
   defenders: CombatCharacter[],
-  attackerPosition: PositionType
+  _attackerPosition: PositionType
 ): CombatCharacter | null {
   const aliveDefenders = defenders.filter((d) => d.currentHp > 0);
   if (aliveDefenders.length === 0) return null;

@@ -10,6 +10,7 @@ import {
   calculateCombatRewards,
 } from '@/utils/combat';
 import { gainExperience } from '@/utils/adventureEngine';
+import type { VeteranTeam } from '@/types';
 
 export default function Combat() {
   const { setScene } = useGameStore();
@@ -147,24 +148,21 @@ export default function Combat() {
         });
 
         // 保存為歷戰隊伍
-        const veteranTeam = {
+        const veteranTeam: VeteranTeam = {
           id: `veteran_${Date.now()}`,
           name: `${selectedDungeon.name} 征服者`,
-          characters: adventureTeam.characters.map((char) => ({
-            id: char.id,
-            name: char.name,
-            job: char.job,
-            element: char.element,
-            rarity: char.rarity,
-            description: char.description,
-            baseStats: char.baseStats,
-            normalSkill: char.normalSkill,
-            ultimateSkill: char.ultimateSkill,
-          })),
+          characters: adventureTeam.characters,
           leaderId: adventureTeam.leaderId,
+          eventCards: adventureTeam.eventCards || [],
           teamLevel: adventureTeam.teamLevel,
-          defeatedDungeons: [selectedDungeon.id],
-          totalStoryness: adventureTeam.teamStoryness,
+          teamExp: adventureTeam.teamExp || 0,
+          teamStoryness: adventureTeam.teamStoryness,
+          createdAt: Date.now(),
+          dungeonId: selectedDungeon.id,
+          totalPower: adventureTeam.characters.reduce((sum, char) =>
+            sum + char.finalStats.atk + char.finalStats.hp, 0
+          ),
+          achievements: [],
         };
         console.log('保存歷戰隊伍:', veteranTeam.name, '角色數:', veteranTeam.characters.length);
         useGameStore.getState().addVeteranTeam(veteranTeam);

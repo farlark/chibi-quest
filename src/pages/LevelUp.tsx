@@ -4,19 +4,19 @@ import { useGameStore } from '@/stores/gameStore';
 import { useAdventureStore } from '@/stores/adventureStore';
 import Button from '@/components/common/Button';
 import { generateLevelUpRewards, applyLevelUpReward } from '@/utils/adventureEngine';
-import type { LevelUpReward } from '@/types';
+import type { LevelUpReward, CharacterCard } from '@/types';
 
 export default function LevelUp() {
-  const { setScene, gameData, addCharacter } = useGameStore();
+  const { setScene, allCharacters, addCharacter } = useGameStore();
   const { adventureTeam, setAdventureTeam, advanceToNextNode, selectedDungeon } = useAdventureStore();
   const [rewards, setRewards] = useState<LevelUpReward[]>([]);
   const [selectedReward, setSelectedReward] = useState<LevelUpReward | null>(null);
 
   useEffect(() => {
-    if (!adventureTeam || !selectedDungeon || !gameData) return;
+    if (!adventureTeam || !selectedDungeon || !allCharacters) return;
 
     // 生成三選一的升級獎勵
-    const availableRecruits = gameData.characters.filter((char) =>
+    const availableRecruits = allCharacters.filter((char: CharacterCard) =>
       selectedDungeon.availableRecruits.includes(char.id)
     );
 
@@ -27,17 +27,17 @@ export default function LevelUp() {
     );
 
     setRewards(generatedRewards);
-  }, [adventureTeam, selectedDungeon, gameData]);
+  }, [adventureTeam, selectedDungeon, allCharacters]);
 
   const handleSelectReward = (reward: LevelUpReward) => {
     setSelectedReward(reward);
   };
 
   const handleConfirmReward = () => {
-    if (!selectedReward || !adventureTeam || !gameData) return;
+    if (!selectedReward || !adventureTeam || !allCharacters) return;
 
     // 應用獎勵
-    const updatedTeam = applyLevelUpReward(adventureTeam, selectedReward, gameData.characters);
+    const updatedTeam = applyLevelUpReward(adventureTeam, selectedReward, allCharacters);
 
     // 如果是招募新角色，也要加入到擁有角色列表
     if (selectedReward.type === 'recruit' && selectedReward.recruit) {
