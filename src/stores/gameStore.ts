@@ -57,16 +57,32 @@ export const useGameStore = create<GameStore>((set) => ({
   allEventCards: [],
   allDungeons: [],
   allEvents: [],
-  setGameData: (data) =>
+  setGameData: (data) => {
+    console.log('Setting game data:', {
+      charactersCount: data.characters?.length || 0,
+      eventCardsCount: data.eventCards?.length || 0,
+      dungeonsCount: data.dungeons?.length || 0,
+      eventsCount: data.events?.length || 0,
+    });
+
+    // 驗證資料完整性
+    if (!data.characters || data.characters.length === 0) {
+      console.error('No characters loaded!');
+    }
+    if (!data.dungeons || data.dungeons.length === 0) {
+      console.error('No dungeons loaded!');
+    }
+
     set({
-      allCharacters: data.characters,
-      allEventCards: data.eventCards,
-      allDungeons: data.dungeons,
-      allEvents: data.events,
+      allCharacters: data.characters || [],
+      allEventCards: data.eventCards || [],
+      allDungeons: data.dungeons || [],
+      allEvents: data.events || [],
       // 初始只給玩家3個角色和所有事件卡
-      ownedCharacters: data.characters.slice(0, 3).map((c) => ({ ...c })),
-      ownedEventCards: data.eventCards.map((e) => ({ ...e })),
-    }),
+      ownedCharacters: (data.characters || []).slice(0, 3).map((c) => ({ ...c })),
+      ownedEventCards: (data.eventCards || []).map((e) => ({ ...e })),
+    });
+  },
 
   // 玩家資源
   ownedCharacters: [],

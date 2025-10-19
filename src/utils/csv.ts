@@ -62,7 +62,7 @@ async function loadCSV<T>(path: string, transform: (row: any) => T): Promise<T[]
  * 加載角色數據
  */
 export async function loadCharacters(): Promise<CharacterCard[]> {
-  return loadCSV('/data/characters.csv', (row): CharacterCard => {
+  return loadCSV(`${import.meta.env.BASE_URL}data/characters.csv`, (row): CharacterCard => {
     const baseStats: BaseStats = {
       hp: parseFloat(row.hp) || DEFAULT_CHARACTER_STATS.hp,
       atk: parseFloat(row.atk) || DEFAULT_CHARACTER_STATS.atk,
@@ -140,7 +140,7 @@ export async function loadCharacters(): Promise<CharacterCard[]> {
  * 加載事件卡數據
  */
 export async function loadEventCards(): Promise<EventCard[]> {
-  return loadCSV('/data/eventCards.csv', (row): EventCard => {
+  return loadCSV(`${import.meta.env.BASE_URL}data/eventCards.csv`, (row): EventCard => {
     return {
       id: row.id,
       name: row.name,
@@ -200,7 +200,7 @@ function parseEventResult(
  * 加載隨機事件數據
  */
 export async function loadRandomEvents(): Promise<RandomEvent[]> {
-  return loadCSV('/data/events.csv', (row): RandomEvent => {
+  return loadCSV(`${import.meta.env.BASE_URL}data/events.csv`, (row): RandomEvent => {
     const event: RandomEvent = {
       id: row.id,
       name: row.name,
@@ -270,7 +270,7 @@ export async function loadRandomEvents(): Promise<RandomEvent[]> {
  * 加載地城數據
  */
 export async function loadDungeons(): Promise<Dungeon[]> {
-  return loadCSV('/data/dungeons.csv', (row): Dungeon => {
+  return loadCSV(`${import.meta.env.BASE_URL}data/dungeons.csv`, (row): Dungeon => {
     return {
       id: row.id,
       name: row.name,
@@ -316,12 +316,34 @@ export async function reloadData(type: 'characters' | 'events' | 'eventCards' | 
 
 // 導出一個便捷的加載所有數據的函數
 export async function loadAllGameData() {
+  console.log('Loading game data from CSV files...');
+
   const [characters, events, eventCards, dungeons] = await Promise.all([
     loadCharacters(),
     loadRandomEvents(),
     loadEventCards(),
     loadDungeons(),
   ]);
+
+  console.log('CSV Data loaded:', {
+    characters: characters.length,
+    events: events.length,
+    eventCards: eventCards.length,
+    dungeons: dungeons.length,
+  });
+
+  // 驗證資料
+  if (characters.length === 0) {
+    console.error('❌ No characters loaded! Check /public/data/characters.csv');
+  } else {
+    console.log('✅ Characters sample:', characters.slice(0, 2).map(c => ({ id: c.id, name: c.name })));
+  }
+
+  if (dungeons.length === 0) {
+    console.error('❌ No dungeons loaded! Check /public/data/dungeons.csv');
+  } else {
+    console.log('✅ Dungeons sample:', dungeons.map(d => ({ id: d.id, name: d.name })));
+  }
 
   return {
     characters,
