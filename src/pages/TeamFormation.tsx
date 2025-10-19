@@ -37,9 +37,9 @@ export default function TeamFormation() {
     setDraggedPosition(position);
   };
 
-  const handleTouchMove = (e: React.TouchEvent) => {
+  const handleTouchMove = (_e: React.TouchEvent) => {
+    // 不需要 preventDefault，使用 CSS touch-action 來防止滾動
     if (touchStart === null) return;
-    e.preventDefault(); // 防止滾動
   };
 
   const handleTouchEnd = (e: React.TouchEvent, dropPosition: number) => {
